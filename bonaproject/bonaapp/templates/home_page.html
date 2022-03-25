@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home Page
+{% endblock title %}
+
+
+{% block search %}
+{% if result %}
+<h1 class="has-text-centered title">Result: {{ search }}</h1>
+ <section class="section">
+        <div class="container">
+            <div class="columns is-multiline  is-justify-content-space-evenly">
+
+                {% for item in products %}
+                    <div class="column card is-3 ">
+                        <div class="card-header">
+                            <div class="card-header-icon">
+                                {% if item.discounted_product %}
+                                    <span class="has-background-success has-text-white py-2 px-4" style="border-radius: 10px">discount</span>
+                                {% endif %}
+                            </div>
+                            <div class="card-header-title is-centered">
+                                <a href="{% url 'bonaapp:product_detail_url' item.pk %}">{{ item.name }}</a>
+                            </div>
+                        </div>
+                        <div class="card-image">
+                            <figure class="image">
+                                <img src="{{ item.image.url }}" alt="">
+                            </figure>
+                        </div>
+                        <div class="card-footer">
+                            <div class="card-footer-item">
+                                {% if item.discounted_product %}
+                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.discounted_price }}</span>
+                                {% else %}
+                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.price }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer-item " >
+
+
+                                <form action="{% url 'bonaapp:add_to_cart_url' item.pk %}" method="GET" style="display: flex" class="counter">
+                                    <a class="counter__btn button is-small" data-direction="minus">-</a>
+                                    <input type="text" value="0.25" class="counter__value" name="kol">
+                                    <a class="counter__btn button is-small" data-direction="plus">+</a>
+                                    <input type="submit" class="button is-info" value="buy">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endif %}
+{% endblock search %}
+
+
+
+
+{% block slider %}
+
+
+<div class="container">
+    <div class="slider">
+
+		{% for item in slider %}
+            {% if not item.product %}
+                <div class="item">
+                    <img src="{{ item.image.url }}">
+                </div>
+            {% else %}
+                 <div class="item">
+                     <a href="{% url 'bonaapp:product_detail_url' item.product.pk %}"><img src="{{ item.image.url }}"></a>
+                 </div>
+            {% endif %}
+        {% endfor %}
+		<!-- Кнопки-стрелочки -->
+		<a class="previous" onclick="previousSlide()">&#10094;</a>
+		<a class="next" onclick="nextSlide()">&#10095;</a>
+	</div>
+</div>
+{% endblock slider %}
+
+
+{% block content %}
+    <section class="section">
+        <div class="container">
+            {% if messages %}
+                <div class="box is-centered has-background-success">
+                    {% for message in messages %}
+                        <p class="title has-text-light has-text-centered">AUTHENTICATED</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="columns is-multiline  is-justify-content-space-evenly">
+
+                {% for item in product %}
+                    <div class="column card is-3 ">
+                        <div class="card-header">
+                            <div class="card-header-icon">
+                                {% if item.discounted_product %}
+                                    <span class="has-background-success has-text-white py-2 px-4" style="border-radius: 10px">discount</span>
+                                {% endif %}
+                            </div>
+                            <div class="card-header-title is-centered">
+                                <a href="{% url 'bonaapp:product_detail_url' item.pk %}">{{ item.name }}</a>
+                            </div>
+                        </div>
+                        <div class="card-image">
+                            <figure class="image">
+                                <img src="{{ item.image.url }}" alt="">
+                            </figure>
+                        </div>
+                        <div class="card-footer">
+                            <div class="card-footer-item">
+                                {% if item.discounted_product %}
+                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.discounted_price }}</span>
+                                {% else %}
+                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.price }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="card-footer-item " >
+
+
+                                <form action="{% url 'bonaapp:add_to_cart_url' item.pk %}" method="GET" style="display: flex" class="counter">
+                                    <a class="counter__btn button is-small" data-direction="minus">-</a>
+                                    <input type="text" value="0.25" class="counter__value" name="kol">
+                                    <a class="counter__btn button is-small" data-direction="plus">+</a>
+                                    <input type="submit" class="button is-info" value="buy">
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock content %}

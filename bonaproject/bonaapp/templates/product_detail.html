@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="columns is-justify-content-space-between">
+            <div class="column is-6 box">
+                <figure class="image">
+                    <img src="{{ product.image.url }}" alt="">
+                </figure>
+            </div>
+            <div class="column is-5 box">
+                <p class="subtitle has-text-centered is-size-3">{{ product.name }}</p>
+                <hr>
+                <div class="content py-2">
+                    {{ product.description }}
+                </div>
+                <p class="subtitle">country: {{ product.country }}</p>
+                <p class="subtitle">price: {{product.price}}</p>
+                <p class="subtitle ">date: {{ product.date }}</p>
+                <div class="buttons">
+                    <a href="{% url 'bonaapp:add_to_cart_url' %}?product={{ product.pk }}" class="button is-primary">Buy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

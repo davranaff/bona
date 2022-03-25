@@ -1,0 +1,15 @@
+<section class="section my-2 is-mobile">
+    <div class="container is-mobile  box ">
+        <h4 class="title has-text-black-ter has-text-centered has-text-weight-bold">Categories</h4>
+        <div class="columns is-multiline is-mobile">
+            {% for item in category %}
+                <div class="column is-2">
+                    <a href="{% url 'bonaapp:category_detail' item.pk %}" class="subtitle has-text-link">
+                        {{ item.name }}
+                        <span class="px-2 has-background-info-dark has-text-white is-size-6" style="border-radius: 20px">{{ item.product_set.count }}</span>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

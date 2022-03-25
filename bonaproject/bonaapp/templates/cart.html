@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+
+{% endblock title %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="box">
+            <h1 class="title has-text-danger has-text-weight-bold has-text-centered">You cart</h1>
+            <div class="content">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td  style="font-size: 25px; font-weight: 900">product</td>
+                            <td  style="font-size: 25px; font-weight: 900">quantity</td>
+                            <td  style="font-size: 25px; font-weight: 900">total price</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in cart %}
+                        <tr>
+                            <td style="font-size: 25px; font-weight: 600">{{ item.product.name }}</td>
+                            <td style="display: flex;font-size: 25px; font-weight: 600;align-items: center" >
+                                <button class="counter__btn" data-direction="minus">-</button>
+                                <button class="counter__btn" data-direction="plus">+</button>
+                                <form action="{% url 'bonaapp:add_to_cart_url' item.product.pk %}" method="GET" style="display: flex">
+                                    <input type="text" value="{{ item.quantity }}" class="counter__value" name="kol">
+                                    <button class="button is-info">Change</button>
+                                </form>
+                            </td>
+                            <td style="font-size: 25px; font-weight: 600">{{ item.total_price }}</td>
+                            <td>
+                                <figure class="image is-vcentered" style="width: 35px ;">
+                                    <a href="{% url 'bonaapp:delete_cart_item' %}?basket_pk={{item.pk}}"><img src="{% static 'icons/trash.png' %}" alt=""></a>
+                                </figure>
+                            </td>
+                            <td>
+                                <a class="js-modal-trigger button" style="background-color: rgba(255,245,0,0.45)" data-target="modal-js-example">Buy later</a>
+                            </td>
+                        </tr>
+                        <div class="modal" id="modal-js-example">
+                          <div class="modal-background"></div>
+                          <div class="modal-card">
+                            <header class="modal-card-head">
+                              <p class="modal-card-title">Modal title</p>
+                              <button class="delete" aria-label="close"></button>
+                            </header>
+                            <section class="modal-card-body">
+                                <form action="{% url 'bonaapp:buy_later_url' item.pk %}" id="later" method="GET">
+                                    <input type="date" class="input" min='{{ date_now|date:"d.m.Y"}}' name="date">
+                                </form>
+                            </section>
+                            <footer class="modal-card-foot">
+                              <button class="button is-success" form="later">Ok</button>
+                              <button class="button" name="text">Cancel</button>
+                            </footer>
+                          </div>
+                        </div>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div  class="buttons is-centered">
+                    <a href="{% url 'bonaapp:home_page' %}" class="button is-warning">Go to home page</a>
+                    {% if cart %}
+                    <a href="{% url 'bonaapp:create_order_url' %}" class="button is-primary">Checkout</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<section class="section">
+    <div class="container">
+        <div class="box">
+            <h1 class="title has-text-danger has-text-weight-bold has-text-centered">You cart(Later)</h1>
+             {% if messages %}
+                 <div class="box is-centered has-background-success">
+                     {% for message in messages %}
+                         <p class="title has-text-light has-text-centered">{{ message }}</p>
+                     {% endfor %}
+                 </div>
+             {% endif %}
+            <div class="content">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <td  style="font-size: 25px; font-weight: 900">product</td>
+                            <td  style="font-size: 25px; font-weight: 900">quantity</td>
+                            <td  style="font-size: 25px; font-weight: 900">total price</td>
+                            <td style="font-size: 25px; font-weight: 900">Buy Date</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in cart_later %}
+                        <tr>
+                            <td style="font-size: 25px; font-weight: 600">{{ item.product.name }}</td>
+                            <td style="display: flex;font-size: 25px; font-weight: 600;align-items: center" >
+                                {{ item.quantity }}
+                            </td>
+                            <td style="font-size: 25px; font-weight: 600">
+                                {{ item.total_price }}
+                            </td>
+                            <td style="font-size: 25px; font-weight: 600">
+                                {{ item.date|date:'d-m-Y' }}
+                            </td>
+                            <td>
+                                <figure class="image is-vcentered" style="width: 35px ;">
+                                    <a href="{% url 'bonaapp:delete_cart_item' %}?buylater_pk={{item.pk}}"><img src="{% static 'icons/trash.png' %}" alt=""></a>
+                                </figure>
+                            </td>
+                            <td>
+                                <a href="{% url 'bonaapp:buy_now_url' item.pk %}" class="button" style="background-color: rgba(255,245,0,0.45)" >Buy Now</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

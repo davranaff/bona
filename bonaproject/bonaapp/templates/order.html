@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        {% if messages %}
+            <div class="box is-centered has-background-danger">
+                {% for message in messages %}
+                    <p class="title has-text-light has-text-centered">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="columns is-justify-content-space-between">
+            <div class="column is-4 box">
+            <div class="column is-4 box p-6">
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="text" class="input" name="address">
+                    <input type="email" class="input" name="email">
+                    <input type="text" class="input" name="telephone_number">
+                    <button class="button is-info">Checkout</button>
+                </form>
+            </div>
+            <div class="column is-7 box is-centered ">
+                <p class="subtitle is-size-3 has-text-centered is-vcentered">Basket <a href="{% url 'bonaapp:cart_url' %}" class="button is-warning">Edit</a></p>
+                <table class="table is-fullwidth">
+                    <thead>
+                        <tr>
+                            <td>product</td>
+                            <td>price</td>
+                            <td>quantity</td>
+                            <td>total price</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in basket %}
+                            <tr>
+                                <td>{{ item.product.name }}</td>
+                                <td>{{ item.product.price }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.total_price }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <p class="subtitle has-text-centered is-size-5">
+                    <span class="has-text-info has-text-weight-bold">amount: {{ amount }}</span>
+                    and
+                    <span class="has-text-info has-text-weight-bold">total: {{ total }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

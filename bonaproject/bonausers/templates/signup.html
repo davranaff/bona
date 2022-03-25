@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+     <div class="container mt-6">
+        <div class="columns is-centered">
+            <div class="card column p-5 is-5 ">
+                <div class="card-header">
+                    <div class="card-header-title is-centered">
+                        Sign Up
+                    </div>
+                </div>
+                <div class="card-content">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {% for item in form %}
+                            <p>
+                                {{ item.help_text }}
+                                <br>
+                                {{ item }}
+                                <br>
+                            </p>
+
+                        {% endfor %}
+                        <div class="buttons is-centered">
+                            <a href="{% url 'bonaapp:home_page' %}" class="button is-warning">Go Back</a>
+                            <button class="button is-info">Sign Up</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
