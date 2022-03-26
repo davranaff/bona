@@ -1,0 +1,4 @@
+cat .gitignore
+
+bonaproject/bonaapp/migrations
+bonaproject/bonausers/migrations
