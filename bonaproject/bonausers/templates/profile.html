@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="columns is-justify-content-space-between">
+            <div class="column is-6 box">
+                <h1 class="title has-text-centered">About me</h1>
+                <p class="subtitle">first name: <b>{% if user.first_name %} {{ user.first_name }} {% else %} you did not enter this {% endif %}</b></p>
+                <p class="subtitle">last name: <b>{% if user.first_name %} {{ user.last_name }} {% else %} you did not enter this {% endif %} </b></p>
+                <p class="subtitle">username: <b>{{ user.username }}</b></p>
+                <p class="subtitle">email: <b>{% if user.email %} {{ user.email }} {% else %} did not provide your email... {% endif %}</b></p>
+                <p class="subtitle has-text-grey is-size-6">If you forgot your password, enter a new password in the form on the right</p>
+            </div>
+            <div class="column is-5 box">
+                <h1 class="title has-text-centered is-size-4">Change your account password</h1>
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for item in form %}
+                        {{ item }}
+                    {% endfor %}
+                    <button class="button is-success is-light">Reset</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
