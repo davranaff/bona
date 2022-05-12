@@ -6,10 +6,10 @@ Home Page
 
 {% block content %}
     <section class="section">
-        <div class="container">
-            <div class="columns is-multiline box">
+        <div class="container is-fullhd">
+            <div class="columns is-multiline ">
                 {% for item in category.product_set.all %}
-                    <div class="column card is-3 ">
+                    <div class="column card is-3 mx-auto mb-5">
                         <div class="card-header">
                             <div class="card-header-icon">
                                 {% if item.discounted_product %}
@@ -17,7 +17,7 @@ Home Page
                                 {% endif %}
                             </div>
                             <div class="card-header-title is-centered">
-                                <a href="">{{ item.name }}</a>
+                                <a href="{% url 'bonaapp:product_detail_url' item.pk %}">{{ item.name }}</a>
                             </div>
                         </div>
                         <div class="card-image">
@@ -28,16 +28,24 @@ Home Page
                         <div class="card-footer">
                             <div class="card-footer-item">
                                 {% if item.discounted_product %}
-                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.discounted_price }}</span>
+                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.discounted_price }}AED
+                                    <br>
+                                    kg,liter</span>
                                 {% else %}
-                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.price }}</span>
+                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.price }}AED
+                                    <br>
+                                    kg,liter</span>
                                 {% endif %}
                             </div>
                             <div class="card-footer-item" >
-                                <form action="{% url 'bonaapp:add_to_cart_url' item.pk %}" method="GET" style="display: flex">
-                                    <input type="number" name="kol" class="input ">
-                                    <button class="button is-info">buy</button>
+                                {% if user.is_authenticated %}
+                                <form action="{% url 'bonaapp:add_to_cart_url' item.pk %}" method="GET" style="display: flex" class="counter is-vcentered">
+                                    <a class="counter__btn button is-small is-warning my-1" style="width: 10px;height: 100%" data-direction="minus">-</a>
+                                    <a class="counter__btn button is-small is-info my-1" style="width: 10px;height: 100%" data-direction="plus">+</a>
+                                    <input type="text" value="0.25" class="counter__value input is-size-7" name="kol" style="width: 50px;height: 40px">
+                                    <input type="submit" class="button is-success" value="buy" >
                                 </form>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

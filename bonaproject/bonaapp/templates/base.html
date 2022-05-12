@@ -1,19 +1,19 @@
+
 {% load static %}
 {% load categories %}
 <!DOCTYPE html>
-<html lang="en" style="background-color: rgba(149,255,144,0.73)">
+<html lang="en" style="background-color: rgba(33,241,155,0.29)">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'bulma/css/bulma.css' %}">
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link rel="shortcut icon" href="{% static 'images/logo.png' %}" type="image/png">
-
     <title>
         BonaFressco
     </title>
 </head>
 <body>
-    <nav class="navbar container" role="navigation" aria-label="main navigation">
+    <nav class="navbar container is-fullhd" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item" href="{% url 'bonaapp:home_page' %}">
             <img src="{% static 'images/logo.png' %}" style="width: 100%">
@@ -29,30 +29,42 @@
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
           <div class="buttons">
-            {% if not user.is_authenticated %}
-            <a href="{% url 'bonausers:signup' %}" class="button is-primary">
-              <strong>Sign up</strong>
+            {% if user.is_authenticated %}
+            <a href="{% url 'bonaapp:history_order_url' %}" class="button is-primary is-light is-outlined">
+              My History
             </a>
-            <a href="{% url 'bonausers:login' %}" class="button is-light">
-              Log in
-            </a>
-            {% else %}
-            <a href="{% url 'bonaapp:history_order_url' %}" class="button is-info">
-              History
-            </a>
-            <a href="{% url 'bonaapp:cart_url' %}" class="button is-info">
-              Cart
-            </a>
-            <a href="{% url 'bonausers:logout' %}" class="button is-danger">
-              Log out
+            <a href="{% url 'bonaapp:cart_url' %}" class="button is-light is-warning is-outlined">
+              My Cart
             </a>
             {% endif %}
               <form action="{% url 'bonaapp:home_page' %}" method="GET">
-                  <input type="search" name="search" class="search">
-                  <button class="button">search</button>
+                  <input type="search" name="search" class="search" placeholder="Write the product name">
+                  <button class="button is-info is-outlined">Search</button>
               </form>
           </div>
         </div>
+          <div class="navbar-end">
+            <div class="navbar-item">
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'bonausers:signup' %}" class="button is-primary is-light mr-2 is-outlined">
+                      <strong>Sign up</strong>
+                    </a>
+                    <a href="{% url 'bonausers:login' %}" class="button is-info is-light is-outlined">
+                      Log in
+                    </a>
+                {% else %}
+                    <a class="button is-primary is-outlined mr-2">
+                      Welcome: {{ user }}
+                    </a>
+                    <a href="{% url 'bonausers:profile' %}" class="button is-info is-outlined mr-2">
+                      My Profile
+                    </a>
+                    <a href="{% url 'bonausers:logout' %}" class="button is-danger">
+                      Log out
+                    </a>
+                {% endif %}
+            </div>
+          </div>
       </div>
     </nav>
     {% categories %}
@@ -66,6 +78,38 @@
     {% block content %}
     {% endblock content %}
 
+    <a href="https://api.whatsapp.com/message/SGMAHKU5L4GCP1?autoload=1&app_absent=0">
+        <div class="help">
+            <p class="has-text-centered">Can i help you?</p>
+        </div>
+    </a>
+
+    <footer class="has-background-success-light mt-6 py-6">
+        <div class="level content">
+            <div class="level-item">
+                <p><a type="tel">+971585757411 , +971585343113</a></p>
+            </div>
+            <div class="level-item">
+                <p><a href="{% url 'bonaapp:about_url' %}">About Us</a></p>
+            </div>
+            <div class="level-item">
+                <a href="{% url 'bonaapp:home_page' %}">
+                    <img src="{% static 'images/logo.png' %}" alt="" style="height: 50px">
+                </a>
+            </div>
+            <div class="level-item">
+                <p><a href="{% url 'bonaapp:about_url' %}#contact">Contact Us</a></p>
+            </div>
+            <div class="level-item">
+                <p><a href="">bonafresco@gmail.com</a></p>
+            </div>
+        </div>
+      <div class="content has-text-centered mt-3">
+        <p>
+          Copyright BonaFresco 2022. All Rights Reserved.The website content is licensed.
+        </p>
+      </div>
+    </footer>
     <script src="{% static 'js/index.js' %}"></script>
 </body>
 </html>

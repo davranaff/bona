@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+from django.core.mail.backends.smtp import EmailBackend
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ov%098$xrqx_bh&5bvkr5^l0tsm=h%m-l$9mk#-uibrt&jkr=s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bonaapp.apps.BonaappConfig',
-    'bonausers.apps.BonausersConfig'
+    'bonausers.apps.BonausersConfig',
+    'captcha'
 ]
 
 MIDDLEWARE = [
@@ -80,11 +82,11 @@ WSGI_APPLICATION = 'bonaproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'bonafressco',
-        'USER': 'bonafressco',
-        'PASSWORD': 'bonafressco',
-        'HOST': '127.0.0.1',
-        'PORT':'5432'
+        'NAME': 'bonafresco79db',
+        'USER': 'super',
+        'PASSWORD': 'Bonafresco123...',
+        'HOST': 'BonaFresco79-2659.postgres.pythonanywhere-services.com',
+        'PORT': 12659
     }
 }
 
@@ -132,3 +134,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR , 'media')
+
+
+# setting Gmail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'bonafresco@gmail.com'
+EMAIL_HOST_PASSWORD = 'Lampard79'
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EМAIL = 'bonafresco@gmail.com'
+# end settings Gmail
+

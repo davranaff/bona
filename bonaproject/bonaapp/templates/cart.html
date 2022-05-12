@@ -1,12 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}
 
-{% endblock title %}
 
 {% block content %}
 <section class="section">
     <div class="container">
+        {% if messages %}
+            <div class="box is-centered has-background-success-light">
+                {% for message in messages %}
+                    <p class="title has-text-danger has-text-centered">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="box">
             <h1 class="title has-text-danger has-text-weight-bold has-text-centered">You cart</h1>
             <div class="content">
@@ -23,16 +28,16 @@
                     <tbody>
                     {% for item in cart %}
                         <tr>
-                            <td style="font-size: 25px; font-weight: 600">{{ item.product.name }}</td>
+                            <td style="font-size: 25px; font-weight: 600"><a href="{% url 'bonaapp:product_detail_url' item.product.pk %}">{{ item.product.name }}</a></td>
                             <td style="display: flex;font-size: 25px; font-weight: 600;align-items: center" >
-                                <button class="counter__btn" data-direction="minus">-</button>
-                                <button class="counter__btn" data-direction="plus">+</button>
+                                <a class="counter__btn button is-small is-warning my-1" style="width: 10px;height: 100%" data-direction="minus">-</a>
+                                <a class="counter__btn button is-small is-info my-1" style="width: 10px;height: 100%" data-direction="plus">+</a>
                                 <form action="{% url 'bonaapp:add_to_cart_url' item.product.pk %}" method="GET" style="display: flex">
                                     <input type="text" value="{{ item.quantity }}" class="counter__value" name="kol">
                                     <button class="button is-info">Change</button>
                                 </form>
                             </td>
-                            <td style="font-size: 25px; font-weight: 600">{{ item.total_price }}</td>
+                            <td style="font-size: 25px; font-weight: 600">{{ item.total_price }} AED</td>
                             <td>
                                 <figure class="image is-vcentered" style="width: 35px ;">
                                     <a href="{% url 'bonaapp:delete_cart_item' %}?basket_pk={{item.pk}}"><img src="{% static 'icons/trash.png' %}" alt=""></a>
@@ -51,7 +56,7 @@
                             </header>
                             <section class="modal-card-body">
                                 <form action="{% url 'bonaapp:buy_later_url' item.pk %}" id="later" method="GET">
-                                    <input type="date" class="input" min='{{ date_now|date:"d.m.Y"}}' name="date">
+                                    <input type="date" class="input" min="{{ date_now|date:'d.m.Y' }}" name="date">
                                 </form>
                             </section>
                             <footer class="modal-card-foot">
@@ -60,12 +65,14 @@
                             </footer>
                           </div>
                         </div>
+                    {% empty %}
+                        <h1 class="title has-text-danger-dark has-text-centered">Empty</h1>
                     {% endfor %}
                     </tbody>
                 </table>
                 <div  class="buttons is-centered">
                     <a href="{% url 'bonaapp:home_page' %}" class="button is-warning">Go to home page</a>
-                    {% if cart %}
+                    {% if cart and quantity %}
                     <a href="{% url 'bonaapp:create_order_url' %}" class="button is-primary">Checkout</a>
                     {% endif %}
                 </div>
@@ -80,14 +87,7 @@
 <section class="section">
     <div class="container">
         <div class="box">
-            <h1 class="title has-text-danger has-text-weight-bold has-text-centered">You cart(Later)</h1>
-             {% if messages %}
-                 <div class="box is-centered has-background-success">
-                     {% for message in messages %}
-                         <p class="title has-text-light has-text-centered">{{ message }}</p>
-                     {% endfor %}
-                 </div>
-             {% endif %}
+            <h1 class="title has-text-danger has-text-weight-bold has-text-centered">Buy Later</h1>
             <div class="content">
                 <table class="table">
                     <thead>
@@ -122,6 +122,8 @@
                                 <a href="{% url 'bonaapp:buy_now_url' item.pk %}" class="button" style="background-color: rgba(255,245,0,0.45)" >Buy Now</a>
                             </td>
                         </tr>
+                    {% empty %}
+                        <h1 class="title has-text-danger-dark has-text-centered">Empty</h1>
                     {% endfor %}
                     </tbody>
                 </table>

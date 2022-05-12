@@ -11,13 +11,13 @@
             </div>
         {% endif %}
         <div class="columns is-justify-content-space-between">
-            <div class="column is-4 box">
             <div class="column is-4 box p-6">
+                <p class="subtitle has-text-centered">fill in the fields to place an order</p>
                 <form method="POST">
                     {% csrf_token %}
-                    <input type="text" class="input" name="address">
-                    <input type="email" class="input" name="email">
-                    <input type="text" class="input" name="telephone_number">
+                    <input type="text" class="input my-2" name="address" placeholder="Address" required>
+                    <input type="email" class="input my-2" name="email" placeholder="Email" required>
+                    <input type="text" class="input my-2" name="telephone_number" placeholder="Phone number" required>
                     <button class="button is-info">Checkout</button>
                 </form>
             </div>
@@ -36,20 +36,61 @@
                         {% for item in basket %}
                             <tr>
                                 <td>{{ item.product.name }}</td>
-                                <td>{{ item.product.price }}</td>
-                                <td>{{ item.quantity }}</td>
-                                <td>{{ item.total_price }}</td>
+                                <td>{{ item.product.price }} AED</td>
+                                <td>{{ item.quantity }} kg \ liter</td>
+                                <td>{{ item.total_price }} AED</td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
                 <p class="subtitle has-text-centered is-size-5">
-                    <span class="has-text-info has-text-weight-bold">amount: {{ amount }}</span>
-                    and
-                    <span class="has-text-info has-text-weight-bold">total: {{ total }}</span>
+                    <span class="has-text-info has-text-weight-bold">total price: <span class="has-text-black">{{ total }}</span> AED</span>
                 </p>
             </div>
         </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container box">
+        {% if messages %}
+            <div class="box is-centered has-background-success">
+                {% for message in messages %}
+                    <p class="title has-text-light has-text-centered">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <h2 class="subtitle has-text-centered">Your History Order</h2>
+        <table class="table is-fullwidth">
+            <thead>
+                <tr>
+                    <td><b>address</b></td>
+                    <td><b>date</b></td>
+                    <td><b>more detailed</b></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order %}
+                    <tr>
+                    <td><b>{{ item.address }}</b></td>
+                    <td><b>{{ item.date|date:"d.m.Y" }}</b></td>
+                    <td>
+                        <p><b>Product Name: </b>
+                        {% for a in item.order_product.all %}
+                            {{ a.product.name }}
+                        {% endfor %}
+                        </p>
+                    </td>
+                    <td>
+                        <a href="{% url 'bonaapp:return_order_url' item.pk %}" class="button is-success">Buy</a>
+                    </td>
+                </tr>
+                {% empty %}
+                    <h1 class="title has-text-danger-dark has-text-centered">Empty</h1>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </section>
 {% endblock content %}

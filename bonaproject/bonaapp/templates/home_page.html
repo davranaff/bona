@@ -7,13 +7,13 @@ Home Page
 
 {% block search %}
 {% if result %}
-<h1 class="has-text-centered title">Result: {{ search }}</h1>
+<h1 class="has-text-centered title has-text-weight-bold">Answer to your request: {{ search }}</h1>
  <section class="section">
         <div class="container">
             <div class="columns is-multiline  is-justify-content-space-evenly">
 
                 {% for item in products %}
-                    <div class="column card is-3 ">
+                    <div class="column card is-3 mx-auto mb-5">
                         <div class="card-header">
                             <div class="card-header-icon">
                                 {% if item.discounted_product %}
@@ -32,23 +32,28 @@ Home Page
                         <div class="card-footer">
                             <div class="card-footer-item">
                                 {% if item.discounted_product %}
-                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.discounted_price }}</span>
+                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.discounted_price }}AED
+                                    <br>
+                                    kg,liter</span>
                                 {% else %}
-                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.price }}</span>
+                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.price }}AED
+                                    <br>
+                                    kg,liter</span>
                                 {% endif %}
                             </div>
                             <div class="card-footer-item " >
-
-
-                                <form action="{% url 'bonaapp:add_to_cart_url' item.pk %}" method="GET" style="display: flex" class="counter">
-                                    <a class="counter__btn button is-small" data-direction="minus">-</a>
-                                    <input type="text" value="0.25" class="counter__value" name="kol">
-                                    <a class="counter__btn button is-small" data-direction="plus">+</a>
-                                    <input type="submit" class="button is-info" value="buy">
+                                {% if user.is_authenticated %}
+                                <form action="{% url 'bonaapp:add_to_cart_url' item.pk %}" method="GET" style="display: flex" class="counter is-vcentered">
+                                    <a class="counter__btn button is-small is-warning my-1" style="width: 10px;height: 100%" data-direction="minus">-</a>
+                                    <a class="counter__btn button is-small is-info my-1" style="width: 10px;height: 100%" data-direction="plus">+</a>
+                                    <input type="text" value="0.25" class="counter__value input is-size-7" name="kol" style="width: 50px;height: 40px">
+                                    <input type="submit" class="button is-success" value="buy" >
                                 </form>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
+
                 {% endfor %}
             </div>
         </div>
@@ -61,7 +66,7 @@ Home Page
 
 {% block slider %}
 
-
+{% if slider %}
 <div class="container">
     <div class="slider">
 
@@ -81,23 +86,25 @@ Home Page
 		<a class="next" onclick="nextSlide()">&#10095;</a>
 	</div>
 </div>
+{% endif %}
 {% endblock slider %}
 
 
 {% block content %}
+    <h1 class="has-text-centered title has-text-weight-bold">All prodcuts</h1>
     <section class="section">
-        <div class="container">
+        <div class="container is-fullhd">
             {% if messages %}
-                <div class="box is-centered has-background-success">
+                <div class="box is-centered has-background-success-light">
                     {% for message in messages %}
-                        <p class="title has-text-light has-text-centered">AUTHENTICATED</p>
+                        <p class="title has-text-success has-text-centered">{{ message }}</p>
                     {% endfor %}
                 </div>
             {% endif %}
-            <div class="columns is-multiline  is-justify-content-space-evenly">
+            <div class="columns is-multiline">
 
                 {% for item in product %}
-                    <div class="column card is-3 ">
+                    <div class="column card is-3 mx-auto mb-5">
                         <div class="card-header">
                             <div class="card-header-icon">
                                 {% if item.discounted_product %}
@@ -116,21 +123,26 @@ Home Page
                         <div class="card-footer">
                             <div class="card-footer-item">
                                 {% if item.discounted_product %}
-                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.discounted_price }}</span>
+                                    <span class="has-background-info has-text-white py-2 px-4 mx-1 is-size-7" style="border-radius: 10px;">{{ item.discounted_price }}AED
+                                    <br>
+                                    kg,liter</span>
                                 {% else %}
-                                    <span class="has-background-info has-text-white py-2 px-4 mx-1" style="border-radius: 10px;">{{ item.price }}</span>
+                                    <span class="has-background-info has-text-white py-2 px-4 mx-1 is-size-7" style="border-radius: 10px;">{{ item.price }}AED
+                                    <br>
+                                    kg,liter</span>
                                 {% endif %}
                             </div>
-                            <div class="card-footer-item " >
-
-
-                                <form action="{% url 'bonaapp:add_to_cart_url' item.pk %}" method="GET" style="display: flex" class="counter">
-                                    <a class="counter__btn button is-small" data-direction="minus">-</a>
-                                    <input type="text" value="0.25" class="counter__value" name="kol">
-                                    <a class="counter__btn button is-small" data-direction="plus">+</a>
-                                    <input type="submit" class="button is-info" value="buy">
+                            <div class="card-footer-item" >
+                                {% if user.is_authenticated %}
+                                <form action="{% url 'bonaapp:add_to_cart_url' item.pk %}" method="GET" style="display: flex" class="counter is-vcentered">
+                                    <a class="counter__btn button is-small is-warning my-1" style="width: 10px;height: 100%" data-direction="minus">-</a>
+                                    <a class="counter__btn button is-small is-info my-1" style="width: 10px;height: 100%" data-direction="plus">+</a>
+                                    <input type="text" value="0.25" class="counter__value input is-size-7" name="kol" style="width: 50px;height: 40px">
+                                    <input type="submit" class="button is-success" value="buy" >
                                 </form>
+                                {% endif %}
                             </div>
+                            <br>
                         </div>
                     </div>
                 {% endfor %}

@@ -3,7 +3,6 @@ from .models import *
 from .forms import *
 from django.contrib import messages
 import datetime
-from django.http import *
 from django.db.models import Q
 from django.core.mail import send_mail
 # Create your views here.
@@ -12,19 +11,16 @@ from django.core.mail import send_mail
 def home_page(request):
     search = request.GET.get('search')
     product = Product.objects.all()
-    category = Category.objects.all()
     result = None
     products = None
     if search:
         products = product.filter(Q(name__icontains=search))
-        category = category.filter(Q(name__icontains=search))
-        if product or category: result = True
+        if product:result = True
     slider = Slider.objects.all()
     return render(request, 'home_page.html', {
         'product':product,
         'products':products,
         'slider':slider,
-        'category':category,
         'result':result,
         'search':search
     })
@@ -48,7 +44,8 @@ def add_to_cart(request,pk):
         Basket.objects.create(owner=request.user, product=product, quantity=kol)
         return redirect('bonaapp:cart_url')
     else:
-        return HttpResponse('error')
+        messages.error(request,'You can\'t add to cart because the quantity must be greater than zero')
+        return redirect('bonaapp:cart_url')
 # delete cart item
 
 def delete_cart_item(request):
@@ -66,14 +63,23 @@ def delete_cart_item(request):
 def cart(request):
     date_now = datetime.date.today()
     cart = Basket.objects.filter(owner=request.user)
+    quantity=None
+    for item in cart:
+        if item.quantity>0:
+            quantity=1
     cart_later = BuyLater.objects.filter(owner=request.user)
-    return render(request, 'cart.html', {'cart':cart,'date_now':date_now,'cart_later':cart_later})
+    return render(request, 'cart.html', {'cart':cart,'date_now':date_now,'cart_later':cart_later,'quantity':quantity})
 
 def product_detail(request,pk):
     product = Product.objects.get(pk=pk)
-    return render(request, 'product_detail.html', {'product':product})
+    products = Product.objects.all()[:12]
+    return render(request, 'product_detail.html', {
+        'product':product,
+        'products':products
+    })
 
 def create_order(request):
+    order = Order.objects.filter(owner = request.user)
     basket = Basket.objects.filter(owner=request.user)
     amount = sum([item.quantity for item in basket])
     total = sum([item.total_price() for item in basket])
@@ -100,9 +106,9 @@ def create_order(request):
                     total=total,
                 )
             basket.delete()
-            messages.success(request,'success')
+            messages.success(request,'Your item has been successfully processed')
             return redirect('bonaapp:history_order_url')
-    return render(request,'order.html',{'basket':basket, 'amount':amount,'total':total})
+    return render(request,'order.html',{'basket':basket, 'amount':amount,'total':total,'order':order})
 
 def history_order(request):
     order = Order.objects.filter(owner=request.user)
@@ -121,7 +127,7 @@ def buylater(request,pk):
 
         )
         basket.delete()
-        messages.success(request,'Buy Later')
+        messages.success(request,'The product was successfully added to the "buy later" list')
         return redirect('bonaapp:cart_url')
 
 
@@ -136,5 +142,15 @@ def buynow(request,pk):
     return redirect('bonaapp:cart_url')
 
 
-def return_order(request,pk):
-    pass
+def return_order(request, pk):
+    order = Order.objects.get(pk=pk)
+    for item in order.order_product.all():
+        Basket.objects.create(
+            owner=request.user,
+            product=item.product,
+            quantity=0.25
+        )
+    return redirect('bonaapp:cart_url')
+
+def about(request):
+    return render(request, 'about.html')
